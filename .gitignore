@@ -1,0 +1,5 @@
+client/.next/
+client/node_modules/
+client/public/images/
+server/node_modules/
+server/.env
