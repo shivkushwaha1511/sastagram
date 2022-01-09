@@ -7,16 +7,18 @@ export const register = async (req, res) => {
   const { name, email, password, secret } = req.body;
 
   // Validation
-  if (!name) res.status(400).send("Name is required");
+  if (!name) return res.status(400).send("Name is required");
 
   if (!password || password.length < 6)
-    res.status(400).send("Password is required and must 6 characters long");
+    return res
+      .status(400)
+      .send("Password is required and must 6 characters long");
 
-  if (!secret) res.status(400).send("Answer is required");
+  if (!secret) return res.status(400).send("Answer is required");
 
   // Email exists?
   const exist = await User.findOne({ email });
-  if (exist) res.status(400).send("Email is taken");
+  if (exist) return res.status(400).send("Email is taken");
 
   const hashed = await hashedPassword(password);
 
@@ -25,11 +27,11 @@ export const register = async (req, res) => {
 
   try {
     await user.save();
-    res.json({
+    return res.json({
       ok: true,
     });
   } catch (err) {
     console.log("Register failed=>", err);
-    res.status(400).send("Error! Try Again");
+    return res.status(400).send("Error! Try Again");
   }
 };
