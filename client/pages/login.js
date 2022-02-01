@@ -28,13 +28,13 @@ const Login = () => {
         }
       );
       // console.log(data);
-      // router.push("/");
 
       //updating context
       setState(data);
 
       //Save in local storage
       window.localStorage.setItem("auth", JSON.stringify(data));
+      router.push("/");
     } catch (err) {
       toast.error(err.response.data);
       setLoading(false);
