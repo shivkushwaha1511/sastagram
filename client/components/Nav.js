@@ -1,11 +1,18 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { UserContext } from "../context";
 import { useRouter } from "next/router";
 
 const Nav = () => {
+  const [current, setCurrent] = useState("");
   const [state, setState] = useContext(UserContext);
   const router = useRouter();
+
+  //For making link active acc. to current page
+  useEffect(() => {
+    setCurrent(process.browser && window.location.pathname);
+    // console.log("path=>", current);
+  }, [process.browser && window.location.pathname]);
 
   const logout = () => {
     window.localStorage.removeItem("auth");
@@ -26,24 +33,43 @@ const Nav = () => {
 
       {state ? (
         <>
-          <Link href="/dashboard" className="nav-item">
-            <a className="nav-link text-white fw-bold fs-5 ms-auto">
+          <Link href="/user/dashboard" className="nav-item">
+            <a
+              className={`nav-link text-white fw-bold fs-5 ms-auto rounded-pill ${
+                current === "/user/dashboard" && "active"
+              }`}
+            >
               {state && state.user && state.user.name}
             </a>
           </Link>
 
-          <a onClick={logout} className="nav-link text-white fw-bold fs-5 ps-0">
+          <a
+            onClick={logout}
+            className="nav-link text-white fw-bold fs-5 ps-3 me-2"
+          >
             Logout
           </a>
         </>
       ) : (
         <>
           <Link href="/register" className="nav-item">
-            <a className="nav-link text-white fw-bold fs-5 ms-auto">Register</a>
+            <a
+              className={`nav-link text-white fw-bold fs-5 ms-auto rounded-pill ${
+                current === "/register" && "active"
+              }`}
+            >
+              Register
+            </a>
           </Link>
 
           <Link href="/login" className="nav-item">
-            <a className="nav-link text-white fw-bold fs-5 ps-0">Login</a>
+            <a
+              className={`nav-link text-white fw-bold fs-5 ps-3 me-2 rounded-pill ${
+                current === "/login" && "active"
+              }`}
+            >
+              Login
+            </a>
           </Link>
         </>
       )}
