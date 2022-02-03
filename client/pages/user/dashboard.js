@@ -2,6 +2,7 @@ import UserRoute from "../../components/routes/UserRoute";
 
 const Dashboard = () => {
   return (
+    //UserRoute - For validating user is loggedin or not
     <UserRoute>
       <div className="container-fluid">
         <div className="row">

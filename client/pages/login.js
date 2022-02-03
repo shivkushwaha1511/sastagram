@@ -16,33 +16,35 @@ const Login = () => {
 
   const router = useRouter();
 
+  //Redirect if already logged in
+  if (state && state.token) router.push("/");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API}/login`,
-        {
-          email,
-          password,
-        }
-      );
-      // console.log(data);
+      const { data } = await axios.post("/login", {
+        email,
+        password,
+      });
 
-      //updating context
-      setState(data);
+      if (data.error) {
+        setLoading(false);
+        toast.error(data.error);
+      } else {
+        //updating context
+        setState(data);
 
-      //Save in local storage
-      window.localStorage.setItem("auth", JSON.stringify(data));
-      router.push("/user/dashboard");
+        //Save in local storage
+        window.localStorage.setItem("auth", JSON.stringify(data));
+        router.push("/user/dashboard");
+      }
     } catch (err) {
-      toast.error(err.response.data);
+      // toast.error(err.response);
+      console.log(err);
       setLoading(false);
     }
   };
-
-  //Redirect if already logged in
-  if (state && state.token) router.push("/");
 
   return (
     <>
@@ -75,7 +77,12 @@ const Login = () => {
                 <p className="text-center">
                   Not yet registered?
                   <Link href="/register">
-                    <a>Register</a>
+                    <a className="text-warning fw-bold">Register</a>
+                  </Link>
+                </p>
+                <p className="text-center">
+                  <Link href="/forgot-password">
+                    <a className="text-warning fw-bold">Forgot password?</a>
                   </Link>
                 </p>
               </div>
