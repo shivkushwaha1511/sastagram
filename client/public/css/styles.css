@@ -1,8 +1,12 @@
-img {
+.home-img {
   width: 1322px;
   height: 450px;
 }
 
 .active {
   background-color: #e4ac06;
+}
+
+.banner-img {
+  background: url("/images/top-banner.jpg");
 }
