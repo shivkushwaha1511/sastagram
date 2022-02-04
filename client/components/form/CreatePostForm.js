@@ -1,14 +1,19 @@
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+
 const CreatePostForm = ({ postContent, setPostContent, postSubmit }) => {
   return (
     <div className="card">
       <div className="card-body">
         <form className="form-group">
-          <textarea
+          <ReactQuill
+            theme="snow"
             value={postContent}
             className="form-control"
             placeholder="Write something...."
-            onChange={(e) => setPostContent(e.target.value)}
-          ></textarea>
+            onChange={(e) => setPostContent(e)}
+          />
         </form>
       </div>
       <div className="card-footer">
