@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
   const [postContent, setPostContent] = useState("");
+  const [image, setImage] = useState({});
+  const [uploading, setUploading] = useState(false);
 
   const postSubmit = async (e) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ const Dashboard = () => {
     try {
       const { data } = await axios.post("/create-post", {
         postContent,
+        image,
       });
 
       if (data.error) {
@@ -22,11 +25,28 @@ const Dashboard = () => {
       } else {
         toast.success("Post created");
         setPostContent("");
+        setImage({});
       }
     } catch (err) {
       console.log(err);
     }
   };
+
+  const handleImageUpload = async (e) => {
+    setUploading(true);
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const { data } = await axios.post("/image-upload", formData);
+      setImage(data);
+      setUploading(false);
+    } catch (err) {
+      console.log(err);
+      setUploading(false);
+    }
+  };
+
   return (
     //UserRoute - For validating user is loggedin or not
     <UserRoute>
@@ -45,6 +65,9 @@ const Dashboard = () => {
               postContent={postContent}
               setPostContent={setPostContent}
               postSubmit={postSubmit}
+              handleImageUpload={handleImageUpload}
+              image={image}
+              uploading={uploading}
             />
           </div>
           <div className="col-md-4">Sidebar</div>
