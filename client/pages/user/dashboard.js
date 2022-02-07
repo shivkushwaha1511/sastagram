@@ -1,16 +1,33 @@
 import UserRoute from "../../components/routes/UserRoute";
 import CreatePostForm from "../../components/form/CreatePostForm";
 import { UserContext } from "../../context";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import PostList from "../../components/cards/PostList";
 
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState({});
   const [uploading, setUploading] = useState(false);
+  const [posts, setPosts] = useState([]);
 
+  //Fetching User Posts
+  useEffect(() => {
+    if (state && state.token) fetchUserPosts();
+  }, [state && state.token]);
+
+  const fetchUserPosts = async () => {
+    try {
+      const { data } = await axios.get("/user-posts");
+      setPosts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Submitting Post
   const postSubmit = async (e) => {
     e.preventDefault();
 
@@ -23,6 +40,7 @@ const Dashboard = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
+        fetchUserPosts();
         toast.success("Post created");
         setPostContent("");
         setImage({});
@@ -32,6 +50,7 @@ const Dashboard = () => {
     }
   };
 
+  //image upload and get url
   const handleImageUpload = async (e) => {
     setUploading(true);
     const file = e.target.files[0];
@@ -69,6 +88,8 @@ const Dashboard = () => {
               image={image}
               uploading={uploading}
             />
+            {/* <pre>{JSON.stringify(posts, null, 4)}</pre> */}
+            <PostList posts={posts} />
           </div>
           <div className="col-md-4">Sidebar</div>
         </div>

@@ -13,7 +13,7 @@ const CreatePostForm = ({
   uploading,
 }) => {
   return (
-    <div className="card">
+    <div className="card mb-5">
       <div className="card-body">
         <form className="form-group">
           <ReactQuill
