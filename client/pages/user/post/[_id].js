@@ -1,38 +1,41 @@
-import UserRoute from "../../components/routes/UserRoute";
-import PostForm from "../../components/form/PostForm";
-import { UserContext } from "../../context";
-import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import PostList from "../../components/cards/PostList";
+import UserRoute from "../../../components/routes/UserRoute";
+import PostForm from "../../../components/form/PostForm";
 
-const Dashboard = () => {
-  const [state] = useContext(UserContext);
+const EditPost = () => {
+  const router = useRouter();
+  const _id = router.query._id;
+
+  // state
+  const [post, setPost] = useState({});
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState({});
   const [uploading, setUploading] = useState(false);
-  const [posts, setPosts] = useState([]);
 
-  //Fetching User Posts
+  // Fetch post
   useEffect(() => {
-    if (state && state.token) fetchUserPosts();
-  }, [state && state.token]);
+    if (_id) fetchPost();
+  }, [_id]);
 
-  const fetchUserPosts = async () => {
+  const fetchPost = async () => {
     try {
-      const { data } = await axios.get("/user-posts");
-      setPosts(data);
+      const { data } = await axios.get(`/edit-post/${_id}`);
+      setPost(data);
+      setPostContent(data.postContent);
+      setImage(data.image);
     } catch (err) {
       console.log(err);
     }
   };
 
-  // Submitting Post
+  // Update post
   const postSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const { data } = await axios.post("/create-post", {
+      const { data } = await axios.put(`/post-update/${_id}`, {
         postContent,
         image,
       });
@@ -40,10 +43,8 @@ const Dashboard = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
-        fetchUserPosts();
-        toast.success("Post created");
-        setPostContent("");
-        setImage({});
+        toast.success("Post updated");
+        router.push("/user/dashboard");
       }
     } catch (err) {
       console.log(err);
@@ -66,20 +67,6 @@ const Dashboard = () => {
     }
   };
 
-  // Deleting Post
-  const handleDelete = async (post) => {
-    try {
-      const answer = window.confirm("Are you sure?");
-      if (!answer) return;
-
-      const { data } = await axios.delete(`/delete-post/${post._id}`);
-      toast.error("Post deleted");
-      fetchUserPosts();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     //UserRoute - For validating user is loggedin or not
     <UserRoute>
@@ -93,7 +80,7 @@ const Dashboard = () => {
         </div>
 
         <div className="row py-3">
-          <div className="col-md-8 px-4">
+          <div className="col-md-8 px-4 offset-2">
             <PostForm
               postContent={postContent}
               setPostContent={setPostContent}
@@ -102,13 +89,11 @@ const Dashboard = () => {
               image={image}
               uploading={uploading}
             />
-            <PostList posts={posts} handleDelete={handleDelete} />
           </div>
-          <div className="col-md-4">Sidebar</div>
         </div>
       </div>
     </UserRoute>
   );
 };
 
-export default Dashboard;
+export default EditPost;

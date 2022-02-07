@@ -4,7 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import { CameraOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 
-const CreatePostForm = ({
+const PostForm = ({
   postContent,
   setPostContent,
   postSubmit,
@@ -54,4 +54,4 @@ const CreatePostForm = ({
   );
 };
 
-export default CreatePostForm;
+export default PostForm;

@@ -11,9 +11,12 @@ import {
 } from "@ant-design/icons";
 import { UserContext } from "../../context";
 import { useContext } from "react";
+import { useRouter } from "next/router";
 
-const PostList = ({ posts }) => {
+const PostList = ({ posts, handleDelete }) => {
   const [state] = useContext(UserContext);
+
+  const router = useRouter();
 
   return (
     <>
@@ -34,14 +37,22 @@ const PostList = ({ posts }) => {
               <div className="mt-3 d-flex">
                 <HeartOutlined className="text-danger h5 me-2" tabIndex={0} />
                 <div className="me-3">3 like</div>
+
                 <CommentOutlined className="h5 me-2" tabIndex={0} />
                 <div className="me-3 flex-grow-1">4 comments</div>
+
                 {state && state.user && state.user._id === post.postedBy._id && (
                   <>
-                    <EditOutlined className="h5 me-4" tabIndex={0} />
+                    <EditOutlined
+                      onClick={() => router.push(`/user/post/${post._id}`)}
+                      className="h5 me-4"
+                      tabIndex={0}
+                    />
+
                     <DeleteOutlined
                       className="h5 me-2 text-danger"
                       tabIndex={0}
+                      onClick={() => handleDelete(post)}
                     />
                   </>
                 )}

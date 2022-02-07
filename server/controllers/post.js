@@ -7,6 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
+// Saving post
 export const createPost = async (req, res) => {
   const { postContent, image } = req.body;
 
@@ -26,6 +27,7 @@ export const createPost = async (req, res) => {
   }
 };
 
+//save image and return image url and public id
 export const imageUpload = async (req, res) => {
   // console.log(req.files);
   try {
@@ -40,6 +42,7 @@ export const imageUpload = async (req, res) => {
   }
 };
 
+//For fetching posts
 export const userPosts = async (req, res) => {
   try {
     const posts = await Post.find()
@@ -48,6 +51,43 @@ export const userPosts = async (req, res) => {
       .limit(10);
 
     res.json(posts);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//For fetching to be editted post
+export const editPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params._id);
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Updating post
+export const updatePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params._id, req.body, {
+      new: true,
+    });
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Delete Post
+export const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params._id);
+    // Delete from cloudinary
+    if (post.image && post.image.public_id) {
+      cloudinary.uploader.destroy(post.image.public_id);
+    }
+
+    return res.json({ ok: true });
   } catch (err) {
     console.log(err);
   }
