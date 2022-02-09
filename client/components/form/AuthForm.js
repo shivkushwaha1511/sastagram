@@ -12,8 +12,39 @@ const AuthForm = ({
   secret,
   setSecret,
   page,
+  updatePage,
+  username,
+  setUsername,
+  about,
+  setAbout,
 }) => (
   <form className="px-4 py-3" onSubmit={handleSubmit}>
+    {updatePage && (
+      <div className="form-group mt-1">
+        <label className="fw-bold">Username</label>
+        <input
+          value={username}
+          type="text"
+          className="form-control"
+          placeholder="Enter username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+    )}
+
+    {updatePage && (
+      <div className="form-group mt-3 mb-2">
+        <label className="fw-bold">About</label>
+        <input
+          value={about}
+          type="text"
+          className="form-control"
+          placeholder="Write about yourself...."
+          onChange={(e) => setAbout(e.target.value)}
+        />
+      </div>
+    )}
+
     {page !== "login" && (
       <div className="form-group mt-1">
         <label className="fw-bold">Name</label>
@@ -34,10 +65,13 @@ const AuthForm = ({
         className="form-control"
         placeholder="Enter your email"
         onChange={(e) => setEmail(e.target.value)}
+        disabled={updatePage}
       />
     </div>
     <div className="form-group mt-3">
-      <label className="fw-bold">Password</label>
+      <label className="fw-bold">
+        {updatePage ? "New password" : "Password"}
+      </label>
       <input
         value={password}
         type="password"
@@ -74,7 +108,9 @@ const AuthForm = ({
     <div className="mt-4 d-grid">
       <button
         disabled={
-          page === "login"
+          updatePage
+            ? false
+            : page === "login"
             ? !email || !password || loading
             : !name || !email || !password || !secret || loading
         }
@@ -82,6 +118,8 @@ const AuthForm = ({
       >
         {loading ? (
           <SyncOutlined spin twoToneColor="#fff" className="py-2" />
+        ) : updatePage ? (
+          "Update"
         ) : page === "login" ? (
           "Login"
         ) : (

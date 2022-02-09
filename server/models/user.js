@@ -24,8 +24,16 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     about: {},
-    photo: String,
+    image: {
+      url: String,
+      public_id: String,
+    },
     following: [{ type: Schema.ObjectId, ref: "User" }],
     follower: [{ type: Schema.ObjectId, ref: "User" }],
   },

@@ -1,6 +1,7 @@
 import User from "../models/user";
 import { hashedPassword, compare } from "../helpers/auth";
 import jwt from "jsonwebtoken";
+import { nanoid } from "nanoid";
 
 export const register = async (req, res) => {
   // console.log(req.body);
@@ -36,7 +37,13 @@ export const register = async (req, res) => {
   const hashed = await hashedPassword(password);
 
   // Creating model Obj.
-  const user = new User({ name, email, password: hashed, secret });
+  const user = new User({
+    name,
+    email,
+    password: hashed,
+    secret,
+    username: nanoid(6),
+  });
 
   try {
     await user.save();
@@ -142,5 +149,48 @@ export const forgotPassword = async (req, res) => {
     return res.json({
       error: "Something wrong! Try again",
     });
+  }
+};
+
+// User Profile Update
+export const profileUpdate = async (req, res) => {
+  try {
+    const data = {};
+
+    if (req.body.username) {
+      data.username = req.body.username;
+    }
+
+    if (req.body.about) {
+      data.about = req.body.about;
+    }
+
+    if (req.body.name) {
+      data.name = req.body.name;
+    }
+
+    if (req.body.image) {
+      data.image = req.body.image;
+    }
+
+    if (req.body.password) {
+      if (req.body.password.length < 6) {
+        return res.json({ error: "Password minimum 6 characters long" });
+      } else {
+        data.password = await hashedPassword(req.body.password);
+      }
+    }
+
+    if (req.body.secret) {
+      data.secret = req.body.secret;
+    }
+
+    let user = await User.findByIdAndUpdate(req.user._id, data, { new: true });
+    res.json(user);
+  } catch (err) {
+    if (err.code == 11000) {
+      return res.json({ error: "Username taken" });
+    }
+    console.log(err);
   }
 };
