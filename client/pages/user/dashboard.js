@@ -5,17 +5,22 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
+import People from "../../components/cards/People";
 
 const Dashboard = () => {
-  const [state] = useContext(UserContext);
+  const [state, setState] = useContext(UserContext);
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState({});
   const [uploading, setUploading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [people, setPeople] = useState([]);
 
-  //Fetching User Posts
+  //Fetching Posts
   useEffect(() => {
-    if (state && state.token) fetchUserPosts();
+    if (state && state.token) {
+      fetchUserPosts();
+      findPeople();
+    }
   }, [state && state.token]);
 
   const fetchUserPosts = async () => {
@@ -25,6 +30,12 @@ const Dashboard = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // Fetch people that are not Followed by user
+  const findPeople = async () => {
+    const { data } = await axios.get("/find-people");
+    setPeople(data);
   };
 
   // Submitting Post
@@ -80,6 +91,27 @@ const Dashboard = () => {
     }
   };
 
+  //Handle follow
+  const handleFollow = async (user) => {
+    try {
+      const { data } = await axios.put("/follow-user", { _id: user._id });
+
+      // Update localstorage and context
+      let auth = JSON.parse(localStorage.getItem("auth"));
+      auth.user = data;
+      localStorage.setItem("auth", JSON.stringify(auth));
+      setState({ ...state, user: data });
+      // Filter out records of people you may know
+      const reco = people.filter((p) => p._id !== user._id);
+      setPeople(reco);
+
+      fetchUserPosts();
+      toast.success(`Following ${user.name}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     //UserRoute - For validating user is loggedin or not
     <UserRoute>
@@ -104,7 +136,12 @@ const Dashboard = () => {
             />
             <PostList posts={posts} handleDelete={handleDelete} />
           </div>
-          <div className="col-md-4">Sidebar</div>
+          <div className="col-md-4 px-3">
+            <div className="fs-5 fw-bold my-2">
+              <u>People you may know</u>
+            </div>
+            <People people={people} handleFollow={handleFollow} />
+          </div>
         </div>
       </div>
     </UserRoute>

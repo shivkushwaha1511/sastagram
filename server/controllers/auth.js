@@ -186,11 +186,58 @@ export const profileUpdate = async (req, res) => {
     }
 
     let user = await User.findByIdAndUpdate(req.user._id, data, { new: true });
+    user.password = undefined;
+    user.secret = undefined;
     res.json(user);
   } catch (err) {
     if (err.code == 11000) {
       return res.json({ error: "Username taken" });
     }
+    console.log(err);
+  }
+};
+
+// Fetch people that are not Followed by user
+export const findPeople = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const following = user.following;
+    following.push(user._id);
+
+    const people = await User.find({ _id: { $nin: following } })
+      .select("-password -secret")
+      .limit(10);
+    res.json(people);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Add follower to followed user
+// As middleware
+export const addFollower = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.body._id, {
+      $addToSet: { follower: req.user._id },
+    });
+    next();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Add following to current user
+export const addFollowing = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $addToSet: { following: req.body._id },
+      },
+      { new: true }
+    ).select("-password -secret");
+    res.json(user);
+  } catch (err) {
     console.log(err);
   }
 };

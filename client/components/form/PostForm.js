@@ -34,7 +34,7 @@ const PostForm = ({
           Post
         </button>
 
-        <label style={{ cursor: "pointer" }}>
+        <label className="pointer">
           {image && image.url ? (
             <Avatar size={30} src={image.url} className="mt-1 me-2" />
           ) : uploading ? (

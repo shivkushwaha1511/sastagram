@@ -10,3 +10,7 @@
 .banner-img {
   background: url("/images/top-banner.jpg");
 }
+
+.pointer {
+  cursor: pointer;
+}

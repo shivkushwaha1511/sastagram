@@ -1,5 +1,6 @@
 import Post from "../models/post";
 import cloudinary from "cloudinary";
+import User from "../models/user";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -45,7 +46,11 @@ export const imageUpload = async (req, res) => {
 //For fetching posts
 export const userPosts = async (req, res) => {
   try {
-    const posts = await Post.find()
+    const user = await User.findById(req.user._id);
+    let following = user.following;
+    following.push(user._id);
+
+    const posts = await Post.find({ postedBy: following })
       .populate("postedBy", "_id name image")
       .sort({ createdAt: -1 })
       .limit(10);

@@ -35,23 +35,21 @@ const PostList = ({ posts, handleDelete }) => {
             <div className="card-footer">
               {post.image && <PostImage url={post.image.url} />}
               <div className="mt-3 d-flex">
-                <HeartOutlined className="text-danger h5 me-2" tabIndex={0} />
+                <HeartOutlined className="text-danger h5 me-2 pointer" />
                 <div className="me-3">3 like</div>
 
-                <CommentOutlined className="h5 me-2" tabIndex={0} />
+                <CommentOutlined className="h5 me-2 pointer" />
                 <div className="me-3 flex-grow-1">4 comments</div>
 
                 {state && state.user && state.user._id === post.postedBy._id && (
                   <>
                     <EditOutlined
                       onClick={() => router.push(`/user/post/${post._id}`)}
-                      className="h5 me-4"
-                      tabIndex={0}
+                      className="h5 me-4 pointer"
                     />
 
                     <DeleteOutlined
-                      className="h5 me-2 text-danger"
-                      tabIndex={0}
+                      className="h5 me-2 text-danger pointer"
                       onClick={() => handleDelete(post)}
                     />
                   </>
