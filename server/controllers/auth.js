@@ -100,7 +100,7 @@ export const login = async (req, res) => {
   }
 };
 
-//authenticating user for accessing dashboard if loggedin
+//authenticating user for accessing pages if loggedin
 export const currentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

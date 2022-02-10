@@ -8,6 +8,8 @@ import {
   editPost,
   updatePost,
   deletePost,
+  likePost,
+  unlikePost,
 } from "../controllers/post";
 
 const router = express.Router();
@@ -24,5 +26,9 @@ router.get("/user-posts", requireSignin, userPosts);
 router.get("/edit-post/:_id", requireSignin, editPost);
 router.put("/post-update/:_id", requireSignin, canUpdatePost, updatePost);
 router.delete("/delete-post/:_id", requireSignin, canUpdatePost, deletePost);
+
+// like Unlike
+router.put("/like-post", requireSignin, likePost);
+router.put("/unlike-post", requireSignin, unlikePost);
 
 module.exports = router;

@@ -1,14 +1,7 @@
 import { List, Avatar } from "antd";
+import { userImage } from "../../functions";
 
 const People = ({ people, handleFollow }) => {
-  const userImage = (user) => {
-    if (user.image && user.image.url) {
-      return user.image.url;
-    } else {
-      return "/images/user.png";
-    }
-  };
-
   return (
     <>
       <List

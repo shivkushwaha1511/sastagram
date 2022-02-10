@@ -113,6 +113,26 @@ const Dashboard = () => {
     }
   };
 
+  // Handle Like & Unlike
+  const handleLike = async (_id) => {
+    try {
+      const { data } = await axios.put("/like-post", { _id });
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUnlike = async (_id) => {
+    console.log(_id);
+    try {
+      const { data } = await axios.put("/unlike-post", { _id });
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     //UserRoute - For validating user is loggedin or not
     <UserRoute>
@@ -135,7 +155,12 @@ const Dashboard = () => {
               image={image}
               uploading={uploading}
             />
-            <PostList posts={posts} handleDelete={handleDelete} />
+            <PostList
+              posts={posts}
+              handleDelete={handleDelete}
+              handleLike={handleLike}
+              handleUnlike={handleUnlike}
+            />
           </div>
           <div className="col-md-4 px-3">
             {state && state.user && (

@@ -6,6 +6,7 @@ import { UserContext } from "../../context";
 import { RollbackOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import UserRoute from "../../components/routes/UserRoute";
+import { userImage } from "../../functions";
 
 const following = () => {
   const [state, setState] = useContext(UserContext);
@@ -41,14 +42,6 @@ const following = () => {
       toast.error(`Unfollowed ${user.name}`);
     } catch (err) {
       console.log(err);
-    }
-  };
-
-  const userImage = (user) => {
-    if (user.image && user.image.url) {
-      return user.image.url;
-    } else {
-      return "/images/user.png";
     }
   };
 

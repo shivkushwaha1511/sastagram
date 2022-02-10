@@ -5,6 +5,7 @@ import { UserContext } from "../../context";
 import { RollbackOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import UserRoute from "../../components/routes/UserRoute";
+import { userImage } from "../../functions";
 
 const follower = () => {
   const [state] = useContext(UserContext);
@@ -21,14 +22,6 @@ const follower = () => {
       setPeople(data);
     } catch (err) {
       console.log(err);
-    }
-  };
-
-  const userImage = (user) => {
-    if (user.image && user.image.url) {
-      return user.image.url;
-    } else {
-      return "/images/user.png";
     }
   };
 
