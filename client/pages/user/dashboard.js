@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
 import People from "../../components/cards/People";
+import Link from "next/link";
 
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
@@ -137,6 +138,23 @@ const Dashboard = () => {
             <PostList posts={posts} handleDelete={handleDelete} />
           </div>
           <div className="col-md-4 px-3">
+            {state && state.user && (
+              <div className="h6 fw-bold my-4 px-5 d-flex justify-content-between">
+                <Link href="/user/following">
+                  <a className="text-dark">
+                    {state.user.following && state.user.following.length}{" "}
+                    Following
+                  </a>
+                </Link>
+                <Link href="/user/follower">
+                  <a className="text-dark">
+                    {state.user.following && state.user.follower.length}{" "}
+                    Followers
+                  </a>
+                </Link>
+              </div>
+            )}
+
             <div className="fs-5 fw-bold my-2">
               <u>People you may know</u>
             </div>

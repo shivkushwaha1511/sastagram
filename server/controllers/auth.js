@@ -241,3 +241,58 @@ export const addFollowing = async (req, res) => {
     console.log(err);
   }
 };
+
+// Remove follower to followed user
+// As middleware
+export const removeFollower = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.body._id, {
+      $pull: { follower: req.user._id },
+    });
+    next();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Remove following to current user
+export const removeFollowing = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { following: req.body._id },
+      },
+      { new: true }
+    ).select("-password -secret");
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Fetch following of user
+export const userFollowing = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const following = await User.find({ _id: user.following })
+      .select("-password -secret")
+      .limit(10);
+    res.json(following);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Fetch followers of user
+export const userFollower = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const follower = await User.find({ _id: user.follower })
+      .select("-password -secret")
+      .limit(10);
+    res.json(follower);
+  } catch (err) {
+    console.log(err);
+  }
+};
