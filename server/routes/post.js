@@ -5,11 +5,13 @@ import {
   createPost,
   imageUpload,
   userPosts,
-  editPost,
+  currentPost,
   updatePost,
   deletePost,
   likePost,
   unlikePost,
+  addComment,
+  removeComment,
 } from "../controllers/post";
 
 const router = express.Router();
@@ -23,12 +25,16 @@ router.post(
 );
 
 router.get("/user-posts", requireSignin, userPosts);
-router.get("/edit-post/:_id", requireSignin, editPost);
+router.get("/current-post/:_id", requireSignin, currentPost);
 router.put("/post-update/:_id", requireSignin, canUpdatePost, updatePost);
 router.delete("/delete-post/:_id", requireSignin, canUpdatePost, deletePost);
 
 // like Unlike
 router.put("/like-post", requireSignin, likePost);
 router.put("/unlike-post", requireSignin, unlikePost);
+
+// Comment
+router.put("/add-comment", requireSignin, addComment);
+router.put("/remove-comment", requireSignin, removeComment);
 
 module.exports = router;

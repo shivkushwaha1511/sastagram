@@ -1,3 +1,5 @@
+// This page is for Authenticating logged User to access pages
+
 import { useEffect, useContext, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";

@@ -51,20 +51,26 @@ export const userPosts = async (req, res) => {
     following.push(user._id);
 
     const posts = await Post.find({ postedBy: following })
-      .populate("postedBy", "_id name image")
+      .populate("postedBy", "_id name image username")
+      .populate("comments.postedBy", "_id name image username")
       .sort({ createdAt: -1 })
       .limit(10);
 
+    posts.map((post) => post.comments.reverse());
     res.json(posts);
   } catch (err) {
     console.log(err);
   }
 };
 
-//For fetching to be editted post
-export const editPost = async (req, res) => {
+//For fetching the under observation post
+export const currentPost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params._id);
+    const post = await Post.findById(req.params._id)
+      .populate("postedBy", "_id name image username")
+      .populate("comments.postedBy", "_id name image username");
+
+    post.comments.reverse();
     res.json(post);
   } catch (err) {
     console.log(err);
@@ -123,6 +129,45 @@ export const unlikePost = async (req, res) => {
       },
       { new: true }
     );
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Comment
+export const addComment = async (req, res) => {
+  try {
+    const { comment, postId } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: { comments: { text: comment, postedBy: req.user._id } },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name image username")
+      .populate("comments.postedBy", "_id name image username");
+
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const removeComment = async (req, res) => {
+  try {
+    const { comment, postId } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { comments: { _id: comment._id } },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name image username")
+      .populate("comments.postedBy", "_id name image username");
+
     res.json(post);
   } catch (err) {
     console.log(err);

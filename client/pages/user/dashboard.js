@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
 import People from "../../components/cards/People";
 import Link from "next/link";
+import { Modal } from "antd";
 
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
@@ -15,6 +16,11 @@ const Dashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [people, setPeople] = useState([]);
+
+  // Comments state
+  const [comment, setComment] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [currentPost, setCurrentPost] = useState({});
 
   //Fetching Posts
   useEffect(() => {
@@ -133,6 +139,46 @@ const Dashboard = () => {
     }
   };
 
+  // Comment
+  const handleComment = (post) => {
+    setCurrentPost(post);
+    setVisible(true);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.put("/add-comment", {
+        comment,
+        postId: currentPost._id,
+      });
+
+      fetchUserPosts();
+      setComment("");
+      setCurrentPost({});
+      setVisible(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteComment = async (postId, comment) => {
+    const ans = window.confirm("Are you sure?");
+    if (!ans) return;
+
+    try {
+      const { data } = await axios.put("/remove-comment", {
+        comment,
+        postId,
+      });
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+    // console.log(postId, comment);
+  };
+
   return (
     //UserRoute - For validating user is loggedin or not
     <UserRoute>
@@ -160,6 +206,8 @@ const Dashboard = () => {
               handleDelete={handleDelete}
               handleLike={handleLike}
               handleUnlike={handleUnlike}
+              handleComment={handleComment}
+              handleDeleteComment={handleDeleteComment}
             />
           </div>
           <div className="col-md-4 px-3">
@@ -186,6 +234,32 @@ const Dashboard = () => {
             <People people={people} handleFollow={handleFollow} />
           </div>
         </div>
+
+        {/* Comment Modal */}
+        <Modal
+          visible={visible}
+          onCancel={() => {
+            setVisible(false);
+            setCurrentPost({});
+          }}
+          title="Post a comment"
+          footer={null}
+        >
+          <form onSubmit={handleCommentSubmit}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Write something..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <div className="text-center">
+              <button className="btn btn-warning mt-3 text-white fw-bold">
+                Comment
+              </button>
+            </div>
+          </form>
+        </Modal>
       </div>
     </UserRoute>
   );

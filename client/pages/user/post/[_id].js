@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import UserRoute from "../../../components/routes/UserRoute";
 import PostForm from "../../../components/form/PostForm";
+import { RollbackOutlined } from "@ant-design/icons";
 
 const EditPost = () => {
   const router = useRouter();
@@ -22,7 +23,7 @@ const EditPost = () => {
 
   const fetchPost = async () => {
     try {
-      const { data } = await axios.get(`/edit-post/${_id}`);
+      const { data } = await axios.get(`/current-post/${_id}`);
       setPost(data);
       setPostContent(data.postContent);
       setImage(data.image);
@@ -91,6 +92,11 @@ const EditPost = () => {
             />
           </div>
         </div>
+
+        <RollbackOutlined
+          className="fw-bold h5 pointer d-flex justify-content-center"
+          onClick={() => router.push("/user/dashboard")}
+        />
       </div>
     </UserRoute>
   );

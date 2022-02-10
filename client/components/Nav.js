@@ -24,7 +24,7 @@ const Nav = () => {
     <nav className="nav d-flex bg-warning py-1">
       <Link href="/" className="nav-item">
         <a className="display-6 fw-bold text-white ps-3 mb-2 flex-grow-1">
-          ShareMe
+          SastaGram
         </a>
       </Link>
 

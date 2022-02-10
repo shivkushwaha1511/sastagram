@@ -17,7 +17,7 @@ const Login = () => {
   const router = useRouter();
 
   //Redirect if already logged in
-  if (state && state.token) router.push("/");
+  if (state && state.token) router.push("/user/dashboard");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
