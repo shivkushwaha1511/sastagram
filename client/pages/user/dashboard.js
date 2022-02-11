@@ -9,6 +9,7 @@ import People from "../../components/cards/People";
 import Link from "next/link";
 import { Modal } from "antd";
 import Pagination from "@material-ui/lab/Pagination";
+import SearchForm from "../../components/form/SearchForm";
 
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
@@ -237,15 +238,15 @@ const Dashboard = () => {
           </div>
           <div className="col-md-4 px-3">
             {state && state.user && (
-              <div className="h6 fw-bold my-4 px-5 d-flex justify-content-between">
+              <div className="my-4 d-flex justify-content-between">
                 <Link href="/user/following">
-                  <a className="text-dark">
+                  <a className="text-dark display-6">
                     {state.user.following && state.user.following.length}{" "}
                     Following
                   </a>
                 </Link>
                 <Link href="/user/follower">
-                  <a className="text-dark">
+                  <a className="text-dark display-6">
                     {state.user.following && state.user.follower.length}{" "}
                     Followers
                   </a>
@@ -253,7 +254,9 @@ const Dashboard = () => {
               </div>
             )}
 
-            <div className="fs-5 fw-bold my-2">
+            <SearchForm findPeople={findPeople} />
+
+            <div className="fs-5 fw-bold my-2 mt-4">
               <u>People you may know</u>
             </div>
             <People people={people} handleFollow={handleFollow} />

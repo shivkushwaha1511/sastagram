@@ -15,6 +15,8 @@ import {
   removeFollower,
   removeFollowing,
   userFollower,
+  searchUser,
+  fetchUser,
 } from "../controllers/auth";
 
 // Register login
@@ -37,5 +39,11 @@ router.put("/unfollow-user", requireSignin, removeFollower, removeFollowing);
 // Fetching following followers
 router.get("/user-following", requireSignin, userFollowing);
 router.get("/user-follower", requireSignin, userFollower);
+
+// Search user
+router.get("/search-user/:query", searchUser);
+
+// Fetch user from username
+router.get("/fetch-user/:username", fetchUser);
 
 module.exports = router;

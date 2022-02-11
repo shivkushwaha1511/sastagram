@@ -296,3 +296,31 @@ export const userFollower = async (req, res) => {
     console.log(err);
   }
 };
+
+// Search user
+export const searchUser = async (req, res) => {
+  const query = req.params.query;
+  try {
+    const user = await User.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { username: { $regex: query, $options: "i" } },
+      ],
+    }).select("-password -secret");
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Fetch User from username
+export const fetchUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username }).select(
+      "-password -secret"
+    );
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+  }
+};

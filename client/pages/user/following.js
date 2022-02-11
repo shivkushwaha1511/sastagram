@@ -1,4 +1,3 @@
-import { List, Avatar } from "antd";
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
@@ -6,7 +5,7 @@ import { UserContext } from "../../context";
 import { RollbackOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import UserRoute from "../../components/routes/UserRoute";
-import { userImage } from "../../functions";
+import People from "../../components/cards/People";
 
 const following = () => {
   const [state, setState] = useContext(UserContext);
@@ -39,6 +38,7 @@ const following = () => {
       const reco = people.filter((p) => p._id !== user._id);
       setPeople(reco);
 
+      fetchFollowing();
       toast.error(`Unfollowed ${user.name}`);
     } catch (err) {
       console.log(err);
@@ -51,28 +51,7 @@ const following = () => {
         <div className="px-2 h4 fw-bold">
           <u>All following</u>
         </div>
-        <List
-          itemLayout="horizontal"
-          dataSource={people}
-          renderItem={(user) => (
-            <List.Item className="px-5">
-              <List.Item.Meta
-                avatar={<Avatar src={userImage(user)} />}
-                title={
-                  <div className="d-flex justify-content-between fw-bold">
-                    <span className="fs-6">{user.username}</span>
-                    <span
-                      className="text-danger h6 fw-bold pt-1 pointer"
-                      onClick={() => handleUnfollow(user)}
-                    >
-                      Unfollow
-                    </span>
-                  </div>
-                }
-              />
-            </List.Item>
-          )}
-        />
+        <People people={people} handleUnfollow={handleUnfollow} />
         <Link href="/user/dashboard" className="my-3">
           <a className="text-dark">
             <RollbackOutlined className="h5 d-flex justify-content-center pointer" />

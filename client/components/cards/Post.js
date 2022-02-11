@@ -38,9 +38,11 @@ const Post = ({
             {/* <Avatar size={40}>{post.postedBy.name[0]}</Avatar> */}
             <Avatar size={40} src={userImage(post.postedBy)} />
 
-            <span className="ms-3 pt-1 fs-5 flex-grow-1 fw-bold">
-              {post.postedBy.username}
-            </span>
+            <Link href={`/user/${post.postedBy.username}`}>
+              <a className="text-dark ms-3 pt-1 fs-5 flex-grow-1 fw-bold">
+                {post.postedBy.username}
+              </a>
+            </Link>
             <span className="pt-2">{moment(post.createdAt).fromNow()}</span>
           </div>
           <div className="card-body">{renderHTML(post.postContent)}</div>

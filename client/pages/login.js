@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Link from "next/link";
