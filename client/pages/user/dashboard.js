@@ -8,6 +8,7 @@ import PostList from "../../components/cards/PostList";
 import People from "../../components/cards/People";
 import Link from "next/link";
 import { Modal } from "antd";
+import Pagination from "@material-ui/lab/Pagination";
 
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
@@ -22,17 +23,30 @@ const Dashboard = () => {
   const [visible, setVisible] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
 
+  // Total posts(Pagination)
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+
+  useState(async () => {
+    try {
+      const { data } = await axios.get("/total-post");
+      setTotal(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
   //Fetching Posts
   useEffect(() => {
     if (state && state.token) {
       fetchUserPosts();
       findPeople();
     }
-  }, [state && state.token]);
+  }, [state && state.token, page]);
 
   const fetchUserPosts = async () => {
     try {
-      const { data } = await axios.get("/user-posts");
+      const { data } = await axios.get(`/user-posts/${page}`);
       setPosts(data);
     } catch (err) {
       console.log(err);
@@ -58,6 +72,7 @@ const Dashboard = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
+        setPage(1);
         fetchUserPosts();
         toast.success("Post created");
         setPostContent("");
@@ -208,6 +223,16 @@ const Dashboard = () => {
               handleUnlike={handleUnlike}
               handleComment={handleComment}
               handleDeleteComment={handleDeleteComment}
+            />
+            {/* <Pagination
+              current={page}
+              total={(total / 3) * 10}
+              onChange={(value) => setPage(value)}
+            /> */}
+            <Pagination
+              count={Math.ceil(total / 3)}
+              page={page}
+              onChange={(e, pg) => setPage(pg)}
             />
           </div>
           <div className="col-md-4 px-3">

@@ -50,11 +50,16 @@ export const userPosts = async (req, res) => {
     let following = user.following;
     following.push(user._id);
 
+    // Pagination
+    const currnetPage = req.params.page || 1;
+    const perPage = 3;
+
     const posts = await Post.find({ postedBy: following })
+      .skip((currnetPage - 1) * perPage)
       .populate("postedBy", "_id name image username")
       .populate("comments.postedBy", "_id name image username")
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(perPage);
 
     posts.map((post) => post.comments.reverse());
     res.json(posts);
@@ -169,6 +174,16 @@ export const removeComment = async (req, res) => {
       .populate("comments.postedBy", "_id name image username");
 
     res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Total posts
+export const totalPost = async (req, res) => {
+  try {
+    const total = await Post.find().estimatedDocumentCount();
+    res.json(total);
   } catch (err) {
     console.log(err);
   }

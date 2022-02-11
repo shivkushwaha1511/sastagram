@@ -12,6 +12,7 @@ import {
   unlikePost,
   addComment,
   removeComment,
+  totalPost,
 } from "../controllers/post";
 
 const router = express.Router();
@@ -24,7 +25,7 @@ router.post(
   imageUpload
 );
 
-router.get("/user-posts", requireSignin, userPosts);
+router.get("/user-posts/:page", requireSignin, userPosts);
 router.get("/current-post/:_id", requireSignin, currentPost);
 router.put("/post-update/:_id", requireSignin, canUpdatePost, updatePost);
 router.delete("/delete-post/:_id", requireSignin, canUpdatePost, deletePost);
@@ -36,5 +37,8 @@ router.put("/unlike-post", requireSignin, unlikePost);
 // Comment
 router.put("/add-comment", requireSignin, addComment);
 router.put("/remove-comment", requireSignin, removeComment);
+
+// Total posts
+router.get("/total-post", totalPost);
 
 module.exports = router;

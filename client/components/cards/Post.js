@@ -93,7 +93,10 @@ const Post = ({
               )}
             </div>
 
-            <ul className="list-group">
+            <ul
+              className="list-group"
+              style={{ maxHeight: "200px", overflow: "auto" }}
+            >
               {post.comments &&
                 post.comments.length > 0 &&
                 post.comments.slice(0, number).map((comm) => (
