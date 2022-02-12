@@ -23,7 +23,10 @@ const Nav = () => {
   return (
     <nav className="nav d-flex bg-warning py-1">
       <Link href="/" className="nav-item">
-        <a className="display-6 fw-bold text-white ps-3 mb-2 flex-grow-1">
+        <a
+          className="display-6 fw-bold text-white ps-3 mb-2 flex-grow-1"
+          style={{ fontFamily: "cursive" }}
+        >
           SastaGram
         </a>
       </Link>

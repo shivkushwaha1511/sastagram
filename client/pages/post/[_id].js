@@ -1,30 +1,29 @@
-import UserRoute from "../../components/routes/UserRoute";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Post from "../../components/cards/Post";
 import { Modal } from "antd";
 import { RollbackOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
+import { UserContext } from "../../context";
+import Head from "next/head";
 
-const comments = () => {
+const comments = (data) => {
   const router = useRouter();
   const _id = router.query._id;
 
-  const [post, setPost] = useState({});
+  const [post, setPost] = useState(data);
+
+  const [state] = useContext(UserContext);
 
   // Comments state
   const [comment, setComment] = useState("");
   const [visible, setVisible] = useState(false);
   const [currentPost, setCurrentPost] = useState({});
 
-  useEffect(() => {
-    if (_id) fetchPost();
-  }, [_id]);
-
   const fetchPost = async () => {
-    const { data } = await axios.get(`/current-post/${_id}`);
-    setPost(data);
+    const post = await axios.get(`/current-post/${_id}`);
+    setPost(post.data);
   };
 
   // Deleting Post
@@ -102,9 +101,30 @@ const comments = () => {
     // console.log(postId, comment);
   };
 
+  // Head tags
+  const userImage = () => {
+    if (post && post.image && post.image.url) {
+      return post.image.url;
+    } else {
+      return "/images/user.png";
+    }
+  };
+
+  const head = () => (
+    <Head>
+      <title>SastaGram-Do masti with dogs</title>
+      <meta name="description" content={post.postContent} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="sastagram" />
+      <meta property="og:url" content={`http://localhost:3000/post/${_id}`} />
+      <meta property="og:description" content={post.about} />
+      <meta property="og:image:secure_url" content={userImage()} />
+    </Head>
+  );
+
   return (
-    <UserRoute>
-      {/* <Post post={post} /> */}
+    <>
+      {head()}
       <div className="py-5 col-8 offset-2">
         <Post
           post={post}
@@ -115,10 +135,13 @@ const comments = () => {
           number={100}
           commentPage={true}
           handleDeleteComment={handleDeleteComment}
+          home={state && state.user ? false : true}
         />
         <RollbackOutlined
           className="fw-bold h5 pointer d-flex justify-content-center"
-          onClick={() => router.push("/user/dashboard")}
+          onClick={() =>
+            router.push(`${state && state.user ? "/user/dashboard" : "/"}`)
+          }
         />
       </div>
 
@@ -146,8 +169,16 @@ const comments = () => {
           </div>
         </form>
       </Modal>
-    </UserRoute>
+    </>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { data } = await axios.get(`/current-post/${context.params._id}`);
+
+  return {
+    props: data,
+  };
+}
 
 export default comments;

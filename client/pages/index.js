@@ -1,20 +1,57 @@
+import axios from "axios";
 import { useContext } from "react";
+import Post from "../components/cards/Post";
 import { UserContext } from "../context";
+import Head from "next/head";
+import Link from "next/link";
 
-const Home = () => {
+const Home = ({ data }) => {
   const [state, setState] = useContext(UserContext);
 
+  const head = () => (
+    <Head>
+      <title>SastaGram-Do masti with dogs</title>
+      <meta name="description" content="Have masti with dogs" />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="sastagram" />
+      <meta property="og:url" content="http://localhost:3000" />
+      <meta property="og:description" content="Have masti with dogs" />
+      <meta
+        property="og:image:secure_url"
+        content="http://localhost:3000/images/default.jpg"
+      />
+    </Head>
+  );
+
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col">
-          <h1 className="dispay-1 text-center text-danger py-5">HomePage</h1>
-          {JSON.stringify(state)}
-          <img src="/images/default.jpg" className="home-img" />
+    <>
+      {head()}
+      <div className="container-fluid home-img text-center text-warning">
+        SastaGram
+      </div>
+      <div className="container-fluid">
+        <div className="row pt-5">
+          {data.map((post) => (
+            <div key={post._id} className="col-md-4">
+              <Link href={`/post/${post._id}`}>
+                <a>
+                  <Post post={post} home={true} />
+                </a>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
+
+export async function getServerSideProps() {
+  const { data } = await axios.get("/all-posts");
+
+  return {
+    props: { data },
+  };
+}
 
 export default Home;

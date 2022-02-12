@@ -1,6 +1,14 @@
 .home-img {
-  width: 1322px;
-  height: 450px;
+  width: 1349px;
+  height: 550px;
+  background-image: url("/images/default.jpg");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 160px 0px 75px 0px;
+  font-family: cursive;
+  font-size: 120px;
 }
 
 .active {

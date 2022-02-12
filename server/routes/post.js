@@ -13,6 +13,7 @@ import {
   addComment,
   removeComment,
   totalPost,
+  allPosts,
 } from "../controllers/post";
 
 const router = express.Router();
@@ -26,7 +27,7 @@ router.post(
 );
 
 router.get("/user-posts/:page", requireSignin, userPosts);
-router.get("/current-post/:_id", requireSignin, currentPost);
+router.get("/current-post/:_id", currentPost);
 router.put("/post-update/:_id", requireSignin, canUpdatePost, updatePost);
 router.delete("/delete-post/:_id", requireSignin, canUpdatePost, deletePost);
 
@@ -40,5 +41,8 @@ router.put("/remove-comment", requireSignin, removeComment);
 
 // Total posts
 router.get("/total-post/:_id", totalPost);
+
+// Get all posts
+router.get("/all-posts", allPosts);
 
 module.exports = router;
