@@ -28,14 +28,14 @@ const Dashboard = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
 
-  useState(async () => {
+  const totalPost = async () => {
     try {
-      const { data } = await axios.get("/total-post");
+      const { data } = await axios.get(`/total-post/${state.user._id}`);
       setTotal(data);
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  };
 
   //Fetching Posts
   useEffect(() => {
@@ -49,6 +49,7 @@ const Dashboard = () => {
     try {
       const { data } = await axios.get(`/user-posts/${page}`);
       setPosts(data);
+      totalPost();
     } catch (err) {
       console.log(err);
     }

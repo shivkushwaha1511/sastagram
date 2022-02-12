@@ -39,6 +39,6 @@ router.put("/add-comment", requireSignin, addComment);
 router.put("/remove-comment", requireSignin, removeComment);
 
 // Total posts
-router.get("/total-post", totalPost);
+router.get("/total-post/:_id", totalPost);
 
 module.exports = router;

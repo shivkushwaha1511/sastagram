@@ -182,8 +182,13 @@ export const removeComment = async (req, res) => {
 // Total posts
 export const totalPost = async (req, res) => {
   try {
-    const total = await Post.find().estimatedDocumentCount();
-    res.json(total);
+    const user = await User.findById(req.params._id);
+    const following = user.following;
+    following.push(user._id);
+    const posts = await Post.find({
+      postedBy: { $in: following },
+    });
+    res.json(posts.length);
   } catch (err) {
     console.log(err);
   }
