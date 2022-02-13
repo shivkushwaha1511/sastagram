@@ -37,9 +37,16 @@ app.use(morgan("dev"));
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
 
 // Socket.io connect event
+// io.on("connect", (socket) => {
+//   socket.on("send-message", (msg) => {
+//     socket.broadcast.emit("receive-message", msg);
+//   });
+// });
+
 io.on("connect", (socket) => {
-  socket.on("send-message", (msg) => {
-    socket.broadcast.emit("receive-message", msg);
+  socket.on("new-post", (post) => {
+    // console.log(post);
+    socket.broadcast.emit("fetch-new-post", post);
   });
 });
 

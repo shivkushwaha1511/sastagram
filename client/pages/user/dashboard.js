@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Modal } from "antd";
 import Pagination from "@material-ui/lab/Pagination";
 import SearchForm from "../../components/form/SearchForm";
+import { io } from "socket.io-client";
 
 const Dashboard = () => {
   const [state, setState] = useContext(UserContext);
@@ -27,6 +28,11 @@ const Dashboard = () => {
   // Total posts(Pagination)
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+
+  // SOCKET
+  const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
+    reconnection: true,
+  });
 
   const totalPost = async () => {
     try {
@@ -79,11 +85,19 @@ const Dashboard = () => {
         toast.success("Post created");
         setPostContent("");
         setImage({});
+        socket.emit("new-post", data);
       }
     } catch (err) {
       console.log(err);
     }
   };
+
+  // fetch new post in realtime
+  useEffect(() => {
+    socket.on("fetch-new-post", (newPost) => {
+      setPosts([newPost, ...posts]);
+    });
+  }, []);
 
   //image upload and get url
   const handleImageUpload = async (e) => {

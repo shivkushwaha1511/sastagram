@@ -1,23 +1,30 @@
 import axios from "axios";
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Post from "../components/cards/Post";
-import { UserContext } from "../context";
 import Head from "next/head";
 import Link from "next/link";
 import io from "socket.io-client";
 
 const Home = ({ data }) => {
-  const [state, setState] = useContext(UserContext);
-
+  const [posts, setPosts] = useState(data);
+  console.log(data);
   // SOCKET
   const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
     reconnection: true,
   });
 
   // Socket Broadcasting Example
+  // useEffect(() => {
+  //   socket.on("receive-message", (msg) => {
+  //     alert(msg);
+  //   });
+  // }, []);
+
+  // Fetching new post
   useEffect(() => {
-    socket.on("receive-message", (msg) => {
-      alert(msg);
+    socket.on("fetch-new-post", (newPost) => {
+      setPosts([newPost, ...posts]);
+      // console.log(posts);
     });
   }, []);
 
@@ -38,19 +45,19 @@ const Home = ({ data }) => {
 
   return (
     <>
-      <button
-        class="btn btn-primary"
+      {/* <button
+        className="btn btn-primary"
         onClick={() => socket.emit("send-message", "Hi! My name is shiv")}
       >
         Send Message
-      </button>
+      </button> */}
       {head()}
       <div className="container-fluid home-img text-center text-warning">
         SastaGram
       </div>
       <div className="container-fluid">
         <div className="row pt-5">
-          {data.map((post) => (
+          {posts.map((post) => (
             <div key={post._id} className="col-md-4">
               <Link href={`/post/${post._id}`}>
                 <a>
