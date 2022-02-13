@@ -1,12 +1,22 @@
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Post from "../components/cards/Post";
 import { UserContext } from "../context";
 import Head from "next/head";
 import Link from "next/link";
+import io from "socket.io-client";
 
 const Home = ({ data }) => {
   const [state, setState] = useContext(UserContext);
+
+  // SOCKET
+  const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
+    reconnection: true,
+  });
+
+  useState(() => {
+    console.log(socket);
+  }, []);
 
   const head = () => (
     <Head>

@@ -8,6 +8,14 @@ const morgan = require("morgan");
 require("dotenv").config();
 
 const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"],
+    allowHeaders: ["content-type"],
+  },
+});
 
 // DB Connection
 mongoose
@@ -16,14 +24,23 @@ mongoose
   .catch((err) => console.log("DB CONNECTION ERROR => ", err));
 
 // MiddleWare
-app.use(express.json());
+app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: [process.env.CLIENT_URL],
+  })
+);
 app.use(morgan("dev"));
 
-// Handling Requests
+// Handling Requests(Auto-load routes)
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
+
+// Socket.io connect event
+io.on("connect", (socket) => {
+  console.log("SOCKETIO=>", socket.id);
+});
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+http.listen(port, () => console.log(`Server running on port ${port}`));
