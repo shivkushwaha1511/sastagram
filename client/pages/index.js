@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import Post from "../components/cards/Post";
 import { UserContext } from "../context";
 import Head from "next/head";
@@ -14,8 +14,11 @@ const Home = ({ data }) => {
     reconnection: true,
   });
 
-  useState(() => {
-    console.log(socket);
+  // Socket Broadcasting Example
+  useEffect(() => {
+    socket.on("receive-message", (msg) => {
+      alert(msg);
+    });
   }, []);
 
   const head = () => (
@@ -35,6 +38,12 @@ const Home = ({ data }) => {
 
   return (
     <>
+      <button
+        class="btn btn-primary"
+        onClick={() => socket.emit("send-message", "Hi! My name is shiv")}
+      >
+        Send Message
+      </button>
       {head()}
       <div className="container-fluid home-img text-center text-warning">
         SastaGram
