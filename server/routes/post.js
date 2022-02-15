@@ -1,5 +1,5 @@
 import express from "express";
-import { requireSignin, canUpdatePost } from "../middlewares";
+import { requireSignin, canUpdatePost, isAdmin } from "../middlewares";
 import formidable from "express-formidable";
 import {
   createPost,
@@ -44,5 +44,8 @@ router.get("/total-post/:_id", totalPost);
 
 // Get all posts
 router.get("/all-posts", allPosts);
+
+// Admin delete post
+router.delete("/admin-delete-post/:_id", requireSignin, isAdmin, deletePost);
 
 module.exports = router;

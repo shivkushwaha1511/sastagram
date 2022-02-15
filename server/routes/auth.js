@@ -1,5 +1,5 @@
 import express from "express";
-import { requireSignin } from "../middlewares";
+import { isAdmin, requireSignin } from "../middlewares";
 
 const router = express.Router();
 import {
@@ -45,5 +45,8 @@ router.get("/search-user/:query", searchUser);
 
 // Fetch user from username
 router.get("/fetch-user/:username", fetchUser);
+
+// Authenticating admin for accessing pages
+router.get("/current-admin", requireSignin, isAdmin, currentUser);
 
 module.exports = router;

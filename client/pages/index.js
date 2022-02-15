@@ -7,7 +7,6 @@ import io from "socket.io-client";
 
 const Home = ({ data }) => {
   const [posts, setPosts] = useState(data);
-  console.log(data);
   // SOCKET
   const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
     reconnection: true,
