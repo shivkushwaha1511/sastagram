@@ -8,9 +8,13 @@ import io from "socket.io-client";
 const Home = ({ data }) => {
   const [posts, setPosts] = useState(data);
   // SOCKET
-  const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
-    reconnection: true,
-  });
+  const socket = io(
+    process.env.NEXT_PUBLIC_SOCKETIO,
+    { path: "/socket.io" },
+    {
+      reconnection: true,
+    }
+  );
 
   // Socket Broadcasting Example
   // useEffect(() => {

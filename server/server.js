@@ -10,6 +10,7 @@ require("dotenv").config();
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
+  path: "/socket.io",
   cors: {
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"],

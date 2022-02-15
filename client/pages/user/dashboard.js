@@ -30,9 +30,13 @@ const Dashboard = () => {
   const [page, setPage] = useState(1);
 
   // SOCKET
-  const socket = io(process.env.NEXT_PUBLIC_SOCKETIO, {
-    reconnection: true,
-  });
+  const socket = io(
+    process.env.NEXT_PUBLIC_SOCKETIO,
+    { path: "/socket.io" },
+    {
+      reconnection: true,
+    }
+  );
 
   const totalPost = async () => {
     try {
