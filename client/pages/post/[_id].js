@@ -125,7 +125,7 @@ const comments = (data) => {
   return (
     <>
       {head()}
-      <div className="py-5 col-8 offset-2">
+      <div className="py-5 col-md-8 offset-md-2 px-3">
         <Post
           post={post}
           handleDelete={handleDelete}

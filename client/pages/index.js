@@ -55,8 +55,10 @@ const Home = ({ data }) => {
         Send Message
       </button> */}
       {head()}
-      <div className="container-fluid home-img text-center text-warning">
-        SastaGram
+      <div className="container-fluid home-img text-warning">
+        <div className="row d-flex justify-content-center">
+          <div className="col-5">SastaGram</div>
+        </div>
       </div>
       <div className="container-fluid">
         <div className="row pt-5">

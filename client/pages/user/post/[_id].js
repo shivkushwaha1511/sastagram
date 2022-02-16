@@ -81,7 +81,7 @@ const EditPost = () => {
         </div>
 
         <div className="row py-3">
-          <div className="col-md-8 px-4 offset-2">
+          <div className="col-md-8 px-4 offset-md-2">
             <PostForm
               postContent={postContent}
               setPostContent={setPostContent}

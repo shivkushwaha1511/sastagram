@@ -61,7 +61,7 @@ const follower = () => {
 
   return (
     <UserRoute>
-      <div className="col-6 offset-3 py-3">
+      <div className="col-md-6 offset-md-3 py-3 px-5">
         <div className="px-2 h4 fw-bold">
           <u>All followers</u>
         </div>

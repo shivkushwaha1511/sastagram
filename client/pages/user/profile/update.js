@@ -93,7 +93,7 @@ const Register = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col-6 offset-3">
+            <div className="col-md-6 offset-md-3">
               <label
                 className="d-flex justify-content-center"
                 style={{ cursor: "pointer" }}
